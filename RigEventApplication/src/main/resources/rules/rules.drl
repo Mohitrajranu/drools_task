@@ -1,0 +1,205 @@
+package rules;
+//generated from Decision Table
+import rigEventDetection.model.RigEventData;
+// rule values at A10, header at A5
+rule "1"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==1 || prevRigEventData.stateId==2 || prevRigEventData.stateId==3, prevRigEventData.depthBit<500.00)
+	then
+		eventObject.setEvent("Bit Above 500 Feet");
+end
+
+// rule values at A11, header at A5
+rule "2"
+	when
+		eventObject: RigEventData(prevRigEventData.blockPosition>48, (prevRigEventData.stateId==1 || prevRigEventData.stateId==2) && (statesListLength==onBottomListCount))
+	then
+		eventObject.setEvent("Tripping RIH");
+end
+
+// rule values at A12, header at A5
+rule "3"
+	when
+		eventObject: RigEventData(prevRigEventData.blockPosition>=35 && prevRigEventData.blockPosition<=48, (prevRigEventData.stateId==1 || prevRigEventData.stateId==2) && (statesListLength==onBottomListCount))
+	then
+		eventObject.setEvent("Casing RIH");
+end
+
+// rule values at A13, header at A5
+rule "4"
+	when
+		eventObject: RigEventData(prevRigEventData.blockPosition>=25 && prevRigEventData.blockPosition<35, (prevRigEventData.stateId==1 || prevRigEventData.stateId==2) && (statesListLength==onBottomListCount))
+	then
+		eventObject.setEvent("Pickup RIH");
+end
+
+// rule values at A14, header at A5
+rule "5"
+	when
+		eventObject: RigEventData(prevRigEventData.blockPosition>0 && prevRigEventData.blockPosition<25, (prevRigEventData.stateId==1 || prevRigEventData.stateId==2) && (statesListLength==onBottomListCount))
+	then
+		eventObject.setEvent("Short RIH");
+end
+
+// rule values at A15, header at A5
+rule "6"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==1, eventObject.isRockItEnabled() == "TRUE")
+	then
+		eventObject.setEvent("Slide Drilling With RockIT");
+end
+
+// rule values at A16, header at A5
+rule "7"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==1, drillingListLength>0 && ((slideDrillingListCount/drillingListLength) > 0.3))
+	then
+		eventObject.setEvent("Slide Drilling Other Oscillation");
+end
+
+// rule values at A17, header at A5
+rule "8"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==1, drillingListLength>0 && ((rotaryDrillingListCount/drillingListLength) > 0.7))
+	then
+		eventObject.setEvent("Rotary Drilling");
+end
+
+// rule values at A18, header at A5
+rule "9"
+	when
+		eventObject: RigEventData(stateId==4, prevRigEventData.stateId==4, eventObject.getStateIdList().size() >=3 && eventObject.getStateIdList().get(0)>=1, prevRigEventData.event.matches("(?i).*(slide|rotary).*"))
+	then
+		eventObject.setEvent("Weight To Slip");
+end
+
+// rule values at A19, header at A5
+rule "10"
+	when
+		eventObject: RigEventData(stateId==1, prevRigEventData.stateId==2, eventObject.getStateIdList().size() >=3 && eventObject.getStateIdList().get(0)>=1, prevRigEventData.event.matches("(?i).*(slide|rotary).*"))
+	then
+		eventObject.setEvent("WTW No Conn");
+end
+
+// rule values at A20, header at A5
+rule "11"
+	when
+		eventObject: RigEventData(stateId==1, prevRigEventData.stateId==3, eventObject.getStateIdList().size() >=3 && eventObject.getStateIdList().get(0)>=3, prevRigEventData.event=="Slip To Slip")
+	then
+		eventObject.setEvent("Slip To Weight");
+end
+
+// rule values at A21, header at A5
+rule "12"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, reamingListCount>(statesListLength/2))
+	then
+		eventObject.setEvent("Reaming");
+		eventObject.setDistanceTableCheck(true);
+end
+
+// rule values at A22, header at A5
+rule "13"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, washingListCount>(statesListLength/2))
+	then
+		eventObject.setEvent("Washing");
+		eventObject.setDistanceTableCheck(true);
+end
+
+// rule values at A23, header at A5
+rule "14"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>0 && prevRigEventData.blockPosition<25)
+	then
+		eventObject.setEvent("Short RIH");
+end
+
+// rule values at A24, header at A5
+rule "15"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>=25 && prevRigEventData.blockPosition<35)
+	then
+		eventObject.setEvent("Pickup RIH");
+end
+
+// rule values at A25, header at A5
+rule "16"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>=35 && prevRigEventData.blockPosition<=48)
+	then
+		eventObject.setEvent("Casing RIH");
+end
+
+// rule values at A26, header at A5
+rule "17"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>48)
+	then
+		eventObject.setEvent("Tripping RIH");
+end
+
+// rule values at A27, header at A5
+rule "18"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>-25 && prevRigEventData.blockPosition<0)
+	then
+		eventObject.setEvent("Short POOH");
+end
+
+// rule values at A28, header at A5
+rule "19"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>-35 && prevRigEventData.blockPosition<=-25)
+	then
+		eventObject.setEvent("Lay Down POOH");
+end
+
+// rule values at A29, header at A5
+rule "20"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition>=-48 && prevRigEventData.blockPosition<=-35)
+	then
+		eventObject.setEvent("Casing POOH");
+end
+
+// rule values at A30, header at A5
+rule "21"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition<-48)
+	then
+		eventObject.setEvent("Tripping POOH");
+end
+
+// rule values at A31, header at A5
+rule "22"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==2, prevRigEventData.blockPosition==0)
+	then
+		eventObject.setEvent("Slips Out Event");
+end
+
+// rule values at A32, header at A5
+rule "23"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==3, prevRigEventData.blockPosition<0, prevRigEventData.event=="Weight To Slip")
+	then
+		eventObject.setEvent("Slip to Slip");
+end
+
+// rule values at A33, header at A5
+rule "24"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==3, prevRigEventData.blockPosition==0)
+	then
+		eventObject.setEvent("Slips In Event");
+end
+
+// rule values at A34, header at A5
+rule "25"
+	when
+		eventObject: RigEventData(prevRigEventData.stateId==3, eventObject.isRockItEnabled() == "TRUE")
+	then
+		eventObject.setEvent("Connection");
+end
+
